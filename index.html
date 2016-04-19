@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AJAX</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+  <script src="main.js"></script>
+</head>
+<body>
+  <h1>Stock Tracker</h1>
+
+
+  <form class='companyForm'>
+    <input id="inputText" type="text">
+    <button class='companyForm'>Get Companies</button>
+  </form>
+
+  <form class='quoteForm'>
+    <input id="symbolText" type="text">
+    <button class='quoteForm'>Get Quotes and Track (type symbol or click on card)</button>
+  </form>
+
+
+  <h2>Companies</h2>
+  <div class="companies"></div>
+
+  <h2>Quotes</h2>
+  <div class="quotes"></div>
+
+</body>
+</html>
