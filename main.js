@@ -4,9 +4,8 @@ $(function() {
 
   $('.companyForm').submit(getCompanies);
   $('.quoteForm').submit(getQuote);
+  $('div.quotes').on('click', 'button.del', deleteQuote );
   renderQuotes();
-  //render saved quotes
-
 
 });
 
@@ -15,6 +14,7 @@ function getCompanies() {
   var inputText = $('#inputText').val();
 
 //  console.log('inputText: ', inputText);
+  $('div.companies').empty();
 
   var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/jsonp?input=' + inputText + '&callback=?';
   $.getJSON(url).done(function(data) {
@@ -54,15 +54,17 @@ function getQuote() {
     var quote = data;
     console.log('quote:', quote);
 
-    var $quote = makeQuoteCard(data);
-
-    $('div.quotes').append($quote);
-
+    if(quote.Symbol == symbol.toUpperCase()) {
+      var $quote = makeQuoteCard(data);
+      $('div.quotes').append($quote);
+    }
 
     //add quotes to local storage
-    var quotes = QuoteStorage.get();
-    quotes.push(quote);
-    QuoteStorage.write(quotes);
+    if(quote.Symbol == symbol.toUpperCase()) {
+      var quotes = QuoteStorage.get();
+      quotes.push(quote);
+      QuoteStorage.write(quotes);
+    }
 
   })
   .fail(function(err) {
@@ -85,16 +87,35 @@ function renderQuotes() {
 function makeQuoteCard(quote) {
   console.log( 'quote: ', quote  );
   var $card = $('<div>').addClass('card');
+  var $button = $('<button>').addClass('del').text('Stop Tracking');
+  var change = quote.ChangeYTD;
 
   var $Symbol = $('<p>').text(`Symbol: ${quote.Symbol}`);
   var $Name = $('<p>').text(`Name: ${quote.Name}`);
   var $High = $('<p>').text(`Daily High: ${quote.High}`);
   var $Low = $('<p>').text(`Daily Low: ${quote.Low}`);
   var $LastPrice = $('<p>').text(`Last Price: ${quote.LastPrice}`);
+  var $ChangeYTD = $('<p>').text(`ChangeYTD: ${change}`);
 
-  $card.append($Symbol, $Name, $High, $Low);
+  $card.append($Symbol, $Name, $High, $Low, $LastPrice, $ChangeYTD, $button);
+
+  if(change >= 0) {
+    $card.addClass('.green');
+  } else {
+    $card.addClass('.red');
+  }
 
   return $card;
+}
+
+function deleteQuote(event) {
+  var index = $(this).closest('div.card').index();
+  var quotes = QuoteStorage.get();
+  quotes.splice(index, 1);
+  QuoteStorage.write(quotes);
+
+  $(this).closest('div.card').remove();
+
 }
 
 var QuoteStorage = {

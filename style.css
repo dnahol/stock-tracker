@@ -1,7 +1,25 @@
+body {
+  background-color: darkblue;
+  color: white;
+  font-family: sans-serif;
+}
+
+button {
+  font-size: 15px;
+}
+
 .card {
-  border: 1px solid #000;
+  border: 1px solid #FFF;
   padding: 5px;
   margin: 10px;
   display: inline-block;
   min-width: 200px;
+}
+
+.red {
+  background-color: red;
+}
+
+.green {
+  background-color: green;
 }
